@@ -12,7 +12,7 @@
         {
             List<string> files = Directory.GetFiles(strInput).Where(x => x.ToLower().EndsWith(".pdf")).ToList();
             MergePdf cls = new  MergePdf();
-            cls.MergeUsingITextSharp(files, strOutputFileName);
+            cls.MergeUsingQuest(files, strOutputFileName);
         }
 
         private static void Cmd(string[] args)
