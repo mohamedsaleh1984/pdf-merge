@@ -4,6 +4,19 @@
     {
         public static void Main(string[] args)
         {
+
+            GeneratePDF("C:\\Users\\Moham\\OneDrive\\Desktop\\Job Offer", "C:\\Users\\Moham\\OneDrive\\Desktop\\Job Offer\\Job-Offer.pdf");
+        }
+
+        public static void GeneratePDF(string strInput, string strOutputFileName)
+        {
+            List<string> files = Directory.GetFiles(strInput).Where(x => x.ToLower().EndsWith(".pdf")).ToList();
+            MergePdf cls = new  MergePdf();
+            cls.MergeUsingITextSharp(files, strOutputFileName);
+        }
+
+        private static void Cmd(string[] args)
+        {
             if (args.Length > 1)
             {
                 string strDir = args[0];
@@ -18,13 +31,6 @@
             {
                 throw new Exception("Parameter are missing.");
             }
-
-        }
-        public static void GeneratePDF(string strInput, string strOutputFileName)
-        {
-            List<string> files = Directory.GetFiles(strInput).Where(x => x.ToLower().EndsWith(".pdf")).ToList();
-            MergePdf cls = new  MergePdf();
-            cls.MergeUsingITextSharp(files, strOutputFileName);
         }
     }
 }

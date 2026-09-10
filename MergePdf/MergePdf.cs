@@ -15,30 +15,38 @@ namespace MergePdf
             PdfCopy pdfCopyProvider = null;
             PdfImportedPage importedPage;
             string outputPdfPath = fileName;
-
-            sourceDocument = new Document();
-            pdfCopyProvider = new PdfCopy(sourceDocument, new FileStream(outputPdfPath, FileMode.Create));
-
-            // Output file Open  
-            sourceDocument.Open();
-
-            // Files list wise Loop  
-            for (int f = 0; f < fileArray.Length; f++)
+            try
             {
-                int pages = TotalPageCount(fileArray[f]);
+                sourceDocument = new Document();
+                pdfCopyProvider = new PdfCopy(sourceDocument, new FileStream(outputPdfPath, FileMode.Create));
 
-                reader = new PdfReader(fileArray[f]);
+                // Output file Open  
+                sourceDocument.Open();
 
-                // Add pages in new file  
-                for (int i = 1; i <= pages; i++)
+                // Files list wise Loop  
+                for (int f = 0; f < fileArray.Length; f++)
                 {
-                    importedPage = pdfCopyProvider.GetImportedPage(reader, i);
-                    pdfCopyProvider.AddPage(importedPage);
+                    int pages = TotalPageCount(fileArray[f]);
+
+                    reader = new PdfReader(fileArray[f]);
+
+                    // Add pages in new file  
+                    for (int i = 1; i <= pages; i++)
+                    {
+                        importedPage = pdfCopyProvider.GetImportedPage(reader, i);
+                        pdfCopyProvider.AddPage(importedPage);
+                    }
+
+                    reader.Close();
                 }
 
-                reader.Close();
-            }
 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            
             // Save the output file  
             sourceDocument.Close();
         }
