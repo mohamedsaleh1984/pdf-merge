@@ -1,5 +1,6 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
+using System.Reflection.PortableExecutable;
 using System.Text.RegularExpressions;
 
 namespace MergePdf
@@ -45,7 +46,7 @@ namespace MergePdf
 
         private int TotalPageCount(string file)
         {
-            using (StreamReader sr = new StreamReader(System.IO.File.OpenRead(file)))
+            using (StreamReader sr = new StreamReader(File.OpenRead(file)))
             {
                 Regex regex = new Regex(@"/Type\s*/Page[^s]");
                 MatchCollection matches = regex.Matches(sr.ReadToEnd());
@@ -80,6 +81,43 @@ namespace MergePdf
 
             reader.Close();
             sourceDocument.Close();
+        }
+
+
+
+        public void ExtractAllPages(string infileName, string outputDir)
+        {
+            int pages = TotalPageCount(infileName);
+
+            for (int i = 1; i <= pages; i++)
+            {
+                string outputPdfPath = Path.Combine(outputDir, $"Page-{i}.pdf");
+
+                PdfReader? reader = null;
+                Document? sourceDocument = null;
+                PdfCopy pdfCopyProvider = null;
+                PdfImportedPage importedPage;
+
+                sourceDocument = new Document();
+                pdfCopyProvider = new PdfCopy(sourceDocument, new FileStream(outputPdfPath, FileMode.Create));
+
+                // Output file Open  
+                sourceDocument.Open();
+
+
+                reader = new PdfReader(infileName);
+
+
+                importedPage = pdfCopyProvider.GetImportedPage(reader, i);
+                pdfCopyProvider.AddPage(importedPage);
+
+
+                reader.Close();
+
+                // Save the output file  
+                sourceDocument.Close();
+            }
+
         }
     }
 }

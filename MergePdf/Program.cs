@@ -4,27 +4,39 @@
     {
         public static void Main(string[] args)
         {
-            if (args.Length > 1)
-            {
-                string strDir = args[0];
-                Console.Write(strDir);
-                string strFileName = args[1];
-                Console.Write(strFileName);
-                string strOutputFileName = Path.Combine(strDir, strFileName);
-                Console.Write(strOutputFileName);
-                GeneratePDF(strDir, strOutputFileName);
-            }
-            else
-            {
-                throw new Exception("Parameter are missing.");
-            }
+            //if (args.Length > 1)
+            //{
+            //    string strDir = args[0];
+            //    Console.Write(strDir);
+            //    string strFileName = args[1];
+            //    Console.Write(strFileName);
+            //    string strOutputFileName = Path.Combine(strDir, strFileName);
+            //    Console.Write(strOutputFileName);
+            //    GeneratePDF(strDir, strOutputFileName);
+            //}
+            //else
+            //{
+            //    throw new Exception("Parameter are missing.");
+            //}
+
+            string strPdfFile = @"G:\Passport\Passport P1.pdf";
+            MergePdf cls = new MergePdf();
+            cls.ExtractAllPages(strPdfFile, @"G:\Passport\New folder");
+
 
         }
         public static void GeneratePDF(string strInput, string strOutputFileName)
         {
             List<string> files = Directory.GetFiles(strInput).Where(x => x.ToLower().EndsWith(".pdf")).ToList();
-            MergePdf cls = new  MergePdf();
+            MergePdf cls = new MergePdf();
             cls.MergeUsingITextSharp(files, strOutputFileName);
+        }
+
+        private static void SplitPDF(string strInput, string strOutputFileName)
+        {
+            MergePdf cls = new MergePdf();
+            cls.ReverseFileITextSharp(strInput, strOutputFileName);
+
         }
     }
 }
